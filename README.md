@@ -1,2 +1,2 @@
-# data-engineering-zoomcampdt
+# zoomcamp-data-engineering
 Workshop Codespaces
