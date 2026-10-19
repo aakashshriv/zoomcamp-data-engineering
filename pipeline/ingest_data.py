@@ -71,8 +71,9 @@ def ingest_data(
 @click.option("--pg-host", default="localhost", show_default=True)
 @click.option("--pg-port", type=int, default=5432, show_default=True)
 @click.option("--pg-db", default="ny_taxi", show_default=True)
-@click.option("--target-table", default="yellow_taxi_data", show_default=True)
+@click.option("--target-table", default="yellow_taxi_trips", show_default=True)
 @click.option("--compression", default="gzip", show_default=True)
+@click.option("--chunksize", default=100000, show_default=True)
 def main(
         year: int,
         month: int,
@@ -83,6 +84,7 @@ def main(
         pg_db: str,
         target_table: str,
         compression: str,
+        chunksize:int
 ) -> None:
     prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow'
     url = f"{prefix}/yellow_tripdata_{year}-{month:02d}.csv.gz"
@@ -93,7 +95,7 @@ def main(
         engine=engine,
         target_table=target_table,
         compression=compression,
-        chunksize=100000
+        chunksize=chunksize
 
     )
 if __name__ == "__main__":
