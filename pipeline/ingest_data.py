@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import click
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
@@ -35,7 +36,7 @@ def ingest_data(
         engine,
         target_table:str,
         compression:str,
-        chunksize:int = 100000) -> pd.DataFrame:
+        chunksize:int = 100000) -> None:
 
     df_iter = pd.read_csv(
         url,
@@ -62,20 +63,30 @@ def ingest_data(
                             con=engine,
                             if_exists="append")    
 
-def main():
-    year = 2021
-    month = 1
-    pg_user = 'root'
-    pg_password = 'root'
-    pg_host = 'localhost'
-    pg_port ='5432'
-    pg_db = "ny_taxi"
-    target_table = "yellow_taxi_data"
-    compression = "gzip"
-
+@click.command()
+@click.option("--year", type=int, default=2021, show_default=True)
+@click.option("--month", type=int, default=1, show_default=True)
+@click.option("--pg-user", default="root", show_default=True)
+@click.option("--pg-pass", default="root", show_default=True)
+@click.option("--pg-host", default="localhost", show_default=True)
+@click.option("--pg-port", type=int, default=5432, show_default=True)
+@click.option("--pg-db", default="ny_taxi", show_default=True)
+@click.option("--target-table", default="yellow_taxi_data", show_default=True)
+@click.option("--compression", default="gzip", show_default=True)
+def main(
+        year: int,
+        month: int,
+        pg_user: str,
+        pg_pass: str,
+        pg_host: str,
+        pg_port: int,
+        pg_db: str,
+        target_table: str,
+        compression: str,
+) -> None:
     prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow'
     url = f"{prefix}/yellow_tripdata_{year}-{month:02d}.csv.gz"
-    engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}')
+    engine = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
 
     ingest_data(
         url=url,
@@ -87,13 +98,3 @@ def main():
     )
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
