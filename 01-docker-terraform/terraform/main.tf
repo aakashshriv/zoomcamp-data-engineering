@@ -10,14 +10,14 @@ terraform {
 
 #cloud plugin for the provider
 provider "google" {
-  project = "project-394a3001-bf49-42ed-9cd"
-  region  = "us-central1"
+  project = var.project
+  region  = var.region
 }
 
 #creating the data warehouse
 resource "google_storage_bucket" "data_lake_bucket" {
-  name          = "bucket-394a3001"
-  location      = "us-central1"
+  name          = var.gcs_bucket_name
+  location      = var.location
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
@@ -42,8 +42,8 @@ resource "google_storage_bucket" "data_lake_bucket" {
 }
 
 resource "google_bigquery_dataset" "dataset" {
-  dataset_id = "my_dataset"
-  location   = "us-central1"
+  dataset_id = var.bq_dataset_name
+  location   = var.location
 
   delete_contents_on_destroy = true
 }
