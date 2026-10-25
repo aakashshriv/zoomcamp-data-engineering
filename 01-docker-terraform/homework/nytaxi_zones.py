@@ -16,11 +16,11 @@ dtype = {
 
 def main():
 
-    url = "https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv"
+    url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv"
 
     df_zones = pd.read_csv(url, dtype=dtype)
 
-    engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
+    engine = create_engine('postgresql://postgres:postgres@localhost:5433/ny_taxi')
 
     df_zones.head(n=0).to_sql(name="zones", con=engine, if_exists="replace")
 
