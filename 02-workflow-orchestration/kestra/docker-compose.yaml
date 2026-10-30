@@ -55,6 +55,7 @@ services:
     # Our base image runs without root, but the Docker Compose implementation needs root to access the Docker socket
     # To run Kestra in a rootless mode in production, see: https://kestra.io/docs/installation/podman-compose
     user: "root"
+    env_file: .env_encoded	
     command: server standalone
     volumes:
       - kestra_data:/app/storage
@@ -81,6 +82,11 @@ services:
               basePath: "/app/storage"
           queue:
             type: postgres
+          ai:
+            type: gemini
+            gemini:
+              model-name: gemini-3.8-flash
+              api-key: ${GEMINI_API_KEY}
           tasks:
             tmpDir:
               path: /tmp/kestra-wd/tmp
